@@ -111,6 +111,20 @@ Tabela: Usuario
 | Email        | VARCHAR          |
 
 ---
+##  Script de Criação do Banco
+
+```sql
+CREATE DATABASE SistemadeLogin;
+
+USE SistemadeLogin;
+
+CREATE TABLE Usuario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    NomeUsuario VARCHAR(100) UNIQUE NOT NULL,
+    SenhaUsuario VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) NOT NULL
+);
+
 
 ## Roadmap
 
