@@ -1,3 +1,10 @@
+# sistema que vai verificar se ha login , se nao tiver Criar um novo e 
+# armazenar no banco de dados
+# ver o seu email e usuario
+#atualizar o email ou o usuario
+#excluir os mesmo
+
+
 import mysql.connector
 
 
@@ -13,14 +20,18 @@ cursor = conexao.cursor()
 
 # CREATE
 
-# update ='UPDATE Usuario set SenhaUsuario = "Dyegoprocuraestagioagosto" WHERE id = 1 '
+def insertnobanco (para1, para2, para3):
+    insertinbanco = 'INSERT into Usuario ( NomeUsuario , SenhaUsuario , Email )' \
+    f' values ("{para1}" , "{para2}" , "{para3}" )'
+    cursor.execute(insertinbanco)
+    
+
+    
 
 
 
-# insert = 'INSERT into Usuario values ( 2 , "Maria" , "marialuciana1982@" , "maria192luciana@hotmail.com" )'
 
-# cursor.execute(update),
-# cursor.execute(insert)
+
 
 
 # READ
@@ -35,35 +46,84 @@ for row in verbanco:
     Nomes.append (row[0])
 
 print (Nomes)
-# print(verbanco)
 
-# select_usuario = "SELECT NomeUsuario from Usuario"
-# ver = cursor.execute(select_usuario)
-# for NamesUsu in Seenames:
-#     print (NamesUsu)
+select_Senha = "SELECT SenhaUsuario from Usuario "
+cursor.execute(select_Senha)
+versenha = cursor.fetchall()
+
+Senhas = []
+for row2 in versenha:
+    print(row2)
+    Nomes.append (row2[0])
+
+print (Senhas)
 
 
 
-# conexao.commit()
+select_Senha = "SELECT Email from Usuario "
+cursor.execute(select_Senha)
+veremails = cursor.fetchall()
+
+Emails = []
+for row3 in veremails:
+    print(row3)
+    Nomes.append (row3[0])
+
+print (Emails)
+
+
+print(verbanco)
+
+
+#UPDATE
+# cursor.execute(update)
 
 
 
-#Backeeend manito
+
+#DELETE
+
+# def deletyou(Email):
+#     comando = 
+
+
+
+
+
 #funcoes
 def cadastro():
     while True:
+        
         print("Vamos te cadastrar em Nosso Banco de Dados")
-        User= input("Digita o Nome do seu usuario :  ")
-        Email = input ("Your best Email :  ")
-        if User in Nomes: 
-            print( 'Invalid')
+        User= input("Enter your ursername :  ")
+        Password = input(" enter your send")
+        Email = input ("Enter Your best Email :  ")
+        if User in Nomes:
+            print("your username is already in use.") 
             continue
-        else : break
+        elif len(User) < 5:
+            print( 'Invalid your user have -5 words')
+            continue
+        elif len(Password) <5:
+            print("the Password cannot less than five words")
+        else: 
+            insertnobanco(User,Password,Email)
+            print("Cadastro concluido com Sucesso")
 
-#funcoes
-print("Bem Vindo ao sistema de login ")
-pergunta1 = input("e seu primeiro login ?")
-if pergunta1.lower() in {"sim","s","si","ss"}:
+            break
+
+
+
+
+#Backeeend 
+Question_Principal = input("Voce quer Criar seu cadastro(cadastrar) , logar (login) , excluir(delete) ou Atualizar(update) ?")
+if Question_Principal.lower() in ["logar","log","login"]:
+    print("Bem Vindo ao sistema de login ")
+    pergunta1 = input("e seu primeiro login ?")
+elif Question_Principal.lower() in {"cadastrar","cadastro"}:
     cadastro()
 
+elif Question_Principal.lower() in {"update","upd","updat","upar","atualizar"}:print()
+
     
+conexao.commit()
