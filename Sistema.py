@@ -9,7 +9,7 @@ import mysql.connector
 
 
     
-
+EMAIL = ""
 conexao = mysql.connector.connect(
          host='localhost',
          user='root',
@@ -24,24 +24,21 @@ def insertnobanco (para1, para2, para3):
     insertinbanco = 'INSERT into Usuario ( NomeUsuario , SenhaUsuario , Email )' \
     f' values ("{para1}" , "{para2}" , "{para3}" )'
     cursor.execute(insertinbanco)
+    print("Segue dados : ")
+    print(para1, para2, para3)
     
-
     
-
-
-
-
-
 
 
 # READ
 
-select_Banco = "SELECT NomeUsuario from Usuario "
-cursor.execute(select_Banco)
-verbanco = cursor.fetchall()
+select_Usuario = "SELECT NomeUsuario from Usuario "
+cursor.execute(select_Usuario)
+verusuario = cursor.fetchall()
+print(verusuario)
 
 Nomes = []
-for row in verbanco:
+for row in verusuario:
     print(row)
     Nomes.append (row[0])
 
@@ -54,7 +51,7 @@ versenha = cursor.fetchall()
 Senhas = []
 for row2 in versenha:
     print(row2)
-    Nomes.append (row2[0])
+    Senhas.append (row2[0])
 
 print (Senhas)
 
@@ -67,12 +64,10 @@ veremails = cursor.fetchall()
 Emails = []
 for row3 in veremails:
     print(row3)
-    Nomes.append (row3[0])
+    Emails.append (row3[0])
 
 print (Emails)
 
-
-print(verbanco)
 
 
 #UPDATE
@@ -81,10 +76,16 @@ print(verbanco)
 
 
 
-#DELETE
+# DELETE
+def deletyou():
+    email = input("Digite o email que deseja excluir: ")
 
-# def deletyou(Email):
-#     comando = 
+    delete = f'DELETE FROM Usuario WHERE Email = "{email}"'
+
+    cursor.execute(delete)
+    conexao.commit()
+
+    print("User delete succesfuly")
 
 
 
@@ -93,30 +94,29 @@ print(verbanco)
 #funcoes
 def cadastro():
     while True:
-        
         print("Vamos te cadastrar em Nosso Banco de Dados")
-        User= input("Enter your ursername :  ")
-        Password = input(" enter your send")
-        Email = input ("Enter Your best Email :  ")
+        User = input("Enter your username: ")
+        Password = input("Enter your password: ")
+        Email = input("Enter your best email: ")
+
         if User in Nomes:
-            print("your username is already in use.") 
+            print("Your username is already in use.")
             continue
         elif len(User) < 5:
-            print( 'Invalid your user have -5 words')
+            print("Invalid: username must have at least 5 characters.")
             continue
-        elif len(Password) <5:
-            print("the Password cannot less than five words")
-        else: 
-            insertnobanco(User,Password,Email)
-            print("Cadastro concluido com Sucesso")
-
-            break
-
+        elif len(Password) < 5:
+            print("Password cannot be less than five characters.")
+            continue  
+        else:
+            insertnobanco(User, Password, Email)
+            print("Cadastro concluído com sucesso")
+            return User, Password, Email 
 
 
 
 #Backeeend 
-Question_Principal = input("Voce quer Criar seu cadastro(cadastrar) , logar (login) , excluir(delete) ou Atualizar(update) ?")
+Question_Principal = input("Voce quer Criar seu cadastro ->(cadastrar) , logar ->(login) , excluir ->(delete) ou Atualizar ->(update) ?")
 if Question_Principal.lower() in ["logar","log","login"]:
     print("Bem Vindo ao sistema de login ")
     pergunta1 = input("e seu primeiro login ?")
@@ -125,5 +125,12 @@ elif Question_Principal.lower() in {"cadastrar","cadastro"}:
 
 elif Question_Principal.lower() in {"update","upd","updat","upar","atualizar"}:print()
 
-    
-conexao.commit()
+elif Question_Principal.lower() in {"cadastrar","cadastro"}:
+    cadastro()
+elif Question_Principal.lower() in {"delete","deletar","delet"}:
+    deletyou()
+    if cursor.rowcount == 0:
+        print("Email não encontrado")
+    else: print("Usuário excluído")
+    s = input("so isso ? ")    
+    conexao.commit()
