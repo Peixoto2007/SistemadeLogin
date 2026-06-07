@@ -71,6 +71,11 @@ print (Emails)
 
 
 #UPDATE
+def update_nome(para1,para2):
+    comando =f'"UPDATE Usuario set NomeUsuario ={para1} WHERE Email = {para2} "'
+
+def update_senha(para1,para2):
+    comando =f'"UPDATE Usuario set SenhaUsuario ={para1} WHERE Email = {para2} "'
 # cursor.execute(update)
 
 
@@ -119,11 +124,26 @@ def cadastro():
 Question_Principal = input("Voce quer Criar seu cadastro ->(cadastrar) , logar ->(login) , excluir ->(delete) ou Atualizar ->(update) ?")
 if Question_Principal.lower() in ["logar","log","login"]:
     print("Bem Vindo ao sistema de login ")
-    pergunta1 = input("e seu primeiro login ?")
+
 elif Question_Principal.lower() in {"cadastrar","cadastro"}:
     cadastro()
 
-elif Question_Principal.lower() in {"update","upd","updat","upar","atualizar"}:print()
+
+
+elif Question_Principal.lower() in {"update","upd","updat","upar","atualizar"}:
+    Atualizaroque=input(" O que voce quer atualizar ? ( Name , Email or Password ?)")
+    if Atualizaroque.lower() in {"name","nome","nombre"}:
+        seuEmail = input("Digita seu Email: ")
+        Userupdate = input("Novo User : ")
+        if seuEmail in Emails:
+            update_nome(Userupdate,seuEmail)
+    elif Question_Principal.lower() in {"senha","password","send"}:
+        seuEmail = input("Digita seu Email: ")
+        senhaupdate = input("New Password : ")
+        if seuEmail in Emails:
+            update_senha(senhaupdate,seuEmail)
+        
+
 
 elif Question_Principal.lower() in {"cadastrar","cadastro"}:
     cadastro()
@@ -132,5 +152,5 @@ elif Question_Principal.lower() in {"delete","deletar","delet"}:
     if cursor.rowcount == 0:
         print("Email não encontrado")
     else: print("Usuário excluído")
-    s = input("so isso ? ")    
-    conexao.commit()
+s = input("so isso ? ")    
+conexao.commit()
