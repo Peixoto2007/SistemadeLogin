@@ -20,12 +20,16 @@ cursor = conexao.cursor()
 
 # CREATE
 
-def insertnobanco (para1, para2, para3):
+def insertnobanco (User, Password, Email):
     insertinbanco = 'INSERT into Usuario ( NomeUsuario , SenhaUsuario , Email )' \
-    f' values ("{para1}" , "{para2}" , "{para3}" )'
+    f' values ("{User}" , "{Password}" , "{Email}" )'
     cursor.execute(insertinbanco)
     print("Segue dados : ")
-    print(para1, para2, para3)
+    print(User, Password, Email)
+    Nomes.append(User)
+    Emails.append(Email)
+    Senhas.append(Password)
+    
     
     
 
@@ -74,10 +78,12 @@ print (Emails)
 def update_nome(para1,para2):
     comando = f'UPDATE Usuario SET NomeUsuario = "{para1}" WHERE Email = "{para2}"'
     cursor.execute(comando)
+    conexao.commit()
 
 def update_senha(para1,para2):
     comando = f'UPDATE Usuario SET SenhaUsuario = "{para1}" WHERE Email = "{para2}"'
     cursor.execute(comando)
+    conexao.commit()
 
 
 
@@ -121,22 +127,41 @@ def cadastro():
             return User, Password, Email 
 
 
-def senha_certa(email,senha):
-    print()
+
 
 #Backeeend 
 while True:
     Question_Principal = input("Voce quer Criar seu cadastro ->(cadastrar) , logar ->(login) , excluir ->(delete), Atualizar ->(update) ou Sair -> (Exit or Sair) ?")
     if Question_Principal.lower() in {"logar","log","login"}:
             logando = input("Digite seu Email ou User : ")
-            if logando in Emails or Nomes:
+            if logando in Emails or logando in Nomes:
                 senhauser= input("Digite sua senha : ")
+                if senhauser in Senhas:
+                    comandoparaverdados = f'SELECT NomeUsuario, SenhaUsuario, Email FROM Usuario WHERE (NomeUsuario = "{logando}" OR Email = "{logando}") AND SenhaUsuario = "{senhauser}"'
+                    cursor.execute(comandoparaverdados)
+                    ver = cursor.fetchall()
+                    if ver:
+                        print(ver)
+                        pergunta_so1 = input("Something more ?")
+                        if pergunta_so1.lower() in ["nao","not","nothing","no"]:
+                            break
+                        else:continue
+                    else:
+                        print("Senha incorreta")
+                        pergunta_so2 = input("Something more ?")
+                        if pergunta_so2.lower() in ["nao","not","nothing","no"]:
+                            break
+                        else:continue
             
             else: print(" Esse email não esta cadastrado ")
 
-    elif Question_Principal.lower() in {"cadastrar","cadastro"}:
+    elif Question_Principal.lower() in ["cadastrar","cadastro"]:
         cadastro()
-        break
+        something_name3 = input("More anything ?")
+        if something_name3.lower() in ["yes","sim","ya","si"]:
+            continue
+        else: break 
+
 
 
 
@@ -149,12 +174,16 @@ while True:
                 if seuEmail in Emails:
                     update_nome(Userupdate,seuEmail)
                     something_name1 = input("Something more ?")
+                
                     if something_name1.lower() in ["yes","sim","ya","si"]:
                             continue
                     else: break 
+                else: 
+                    print("Email não encontrado")
+                    print("Tente Novamente")
+                    break
 
             elif Atualizaroque.lower() in ["senha","password","send"]:
-                while True:
                     seuEmail = input("Digita seu Email: ")
                     senhaupdate = input("New Password : ")
                     if seuEmail in Emails:
@@ -163,19 +192,22 @@ while True:
                         if something_name2.lower() in ["yes","sim","ya","si"]:
                             continue
                         else: break
+                    else: 
+                        print("Email não encontrado")
+                        print("Tente Novamente")
+                        break
             
     elif Question_Principal.lower() in ["delete","deletar","delet"]:
         while True:
             deletyou()
             if cursor.rowcount == 0:
                 print("Email não encontrado")
+                print("Tente Novamente")
                 continue
             else: print("Usuário excluído") 
             break
     elif Question_Principal.lower() in ["sair","exit"]:
         break
-s = input("so isso ? ") 
-if s in ["sim","yes","s","ye"]:  
-    print("commit")
-    conexao.commit()
-    print("commit feito")
+
+conexao.commit()
+
